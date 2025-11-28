@@ -9,24 +9,26 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Create executable from main.cpp
+# Create executable
 add_executable(${PROJECT_NAME} main.cpp)
 
 # -------------------------
-# STATIC LINKING SETTINGS
+# STATIC / DYNAMIC LINKING
 # -------------------------
+# Release  = static runtime
+# Debug    = dynamic runtime (recommended)
 
-# Force static linking of the runtime (MSVC / GCC)
 if(MSVC)
-    # /MT = static runtime, /MD = dynamic runtime
-    foreach(flag_var
-        CMAKE_C_FLAGS CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_DEBUG
-        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_DEBUG)
-        string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-    endforeach()
+    # MSVC: /MT for Release, /MD for Debug
+    # CMake 3.15+ has a built-in variable for this:
+    set(CMAKE_MSVC_RUNTIME_LIBRARY
+        "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 else()
-    # For GCC / MinGW: static link libstdc++ and libc++
-    target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
+    # GCC / MinGW
+    # Static link *only for Release*
+    target_link_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Release>:-static-libgcc -static-libstdc++>
+    )
 endif()
 
 # -------------------------
