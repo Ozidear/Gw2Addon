@@ -25,7 +25,7 @@ target_include_directories(nexus_api_lib INTERFACE
 )
 
 # Create executable
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp)
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PRIVATE
