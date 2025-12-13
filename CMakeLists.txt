@@ -24,12 +24,21 @@ target_include_directories(nexus_api_lib INTERFACE
     ${nexus_api_SOURCE_DIR}
 )
 
-# Create executable
+FetchContent_Declare(
+    httplib
+    GIT_REPOSITORY https://github.com/yhirose/cpp-httplib.git
+    GIT_TAG v0.22.0
+)
+FetchContent_MakeAvailable(httplib)
+
+# -------------------------
+# Executable
+# -------------------------
 add_executable(${PROJECT_NAME} src/main.cpp)
 
-# Link dependencies
 target_link_libraries(${PROJECT_NAME} PRIVATE
     nexus_api_lib
+    httplib::httplib
 )
 
 # -------------------------
