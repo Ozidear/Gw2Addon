@@ -1,16 +1,20 @@
+#include <httplib.h>
 #include <iostream>
-#include <vector>
-#include <string>
 
-using namespace std;
+int main() {
+    // Create a client for the host
+    httplib::Client cli("https://api.farming-community.eu");
 
-int main()
-{
-    vector<string> msg {"Hello", "C++", "World", "from", "VS Code", "and the C++ extension!"};
+    // Fire a GET request
+    auto res = cli.Get("/api/v1/details/salvaging/unid-gear/piece-of-rare-unidentified-gear");
 
-    for (const string& word : msg)
-    {
-        cout << word << " ";
+    // Check result and print raw response
+    if (res) {
+        std::cout << "HTTP " << res->status << "\n";
+        std::cout << res->body << "\n";
+    } else {
+        std::cerr << "Request failed\n";
     }
-    cout << endl;
+
+    return 0;
 }
