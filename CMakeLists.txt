@@ -1,5 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(VCPKG_TARGET_TRIPLET "x64-windows-static" CACHE STRING "")
+    set(OPENSSL_USE_STATIC_LIBS TRUE)
+else()
+    set(VCPKG_TARGET_TRIPLET "x64-windows" CACHE STRING "")
+endif()
+
 set(PROJECT_NAME Gw2Addon)
 project(${PROJECT_NAME} LANGUAGES CXX)
 
@@ -15,12 +22,7 @@ if(MSVC)
     )
 endif()
 
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(VCPKG_TARGET_TRIPLET "x64-windows-static" CACHE STRING "")
-    set(OPENSSL_USE_STATIC_LIBS TRUE)
-else()
-    set(VCPKG_TARGET_TRIPLET "x64-windows" CACHE STRING "")
-endif()
+# OpenSSL
 find_package(OpenSSL REQUIRED)
 
 include(FetchContent)
@@ -46,7 +48,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(httplib)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+# Change to SHARED library in Release, executable otherwise
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_library(${PROJECT_NAME} SHARED src/main.cpp)
+else()
+    add_executable(${PROJECT_NAME} src/main.cpp)
+endif()
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
     nexus_api
     httplib::httplib
