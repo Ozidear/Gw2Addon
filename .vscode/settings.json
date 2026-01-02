@@ -1,7 +1,6 @@
 {
   "clangd.arguments": [
     "--compile-commands-dir=build/debug",
-    "--background-index",
-    "--experimental-modules-support"
+    "--background-index"
   ]
 }

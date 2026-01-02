@@ -50,20 +50,10 @@ FetchContent_MakeAvailable(httplib)
 
 # Change to SHARED library in Release, executable otherwise
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    add_library(${PROJECT_NAME} SHARED src/main.cpp)
+    add_library(${PROJECT_NAME} SHARED src/main.cpp src/http.cpp)
 else()
-    add_executable(${PROJECT_NAME} src/main.cpp)
+    add_executable(${PROJECT_NAME} src/main.cpp src/http.cpp)
 endif()
-
-target_sources(${PROJECT_NAME}
-    PRIVATE
-        src/main.cpp
-    PUBLIC 
-        FILE_SET CXX_MODULES 
-        BASE_DIRS src
-        FILES 
-            src/http.cppm
-)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     nexus_api

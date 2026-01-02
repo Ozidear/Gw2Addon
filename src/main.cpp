@@ -1,8 +1,7 @@
-#include <httplib.h>
 #include <Nexus.h>
 #include <string>
 
-import http;
+#include "http.h"
 
 AddonAPI* g_addon_api = nullptr;
 

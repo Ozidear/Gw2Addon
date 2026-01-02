@@ -1,14 +1,12 @@
-module;
-
 #include <httplib.h>
 #include <iostream>
 
-export module http;
+#include "http.h"
 
-export void https() {
+void https() {
     httplib::Client client{"https://api.farming-community.eu"};
 
-    auto res = client.Get("/api/v1/details/salvaging/unid-gear/piece-of-rare-unidentified-gear");
+    httplib::Result res = client.Get("/api/v1/details/salvaging/unid-gear/piece-of-rare-unidentified-gear");
     
     // Check result and print raw response
     if (res) {
