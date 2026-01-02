@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.28)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(VCPKG_TARGET_TRIPLET "x64-windows-static" CACHE STRING "")
+    set(VCPKG_TARGET_TRIPLET "x64-windows-static" CACHE STRING "" FORCE)
     set(OPENSSL_USE_STATIC_LIBS TRUE)
 else()
-    set(VCPKG_TARGET_TRIPLET "x64-windows" CACHE STRING "")
+    set(VCPKG_TARGET_TRIPLET "x64-windows" CACHE STRING "" FORCE)
 endif()
 
 set(PROJECT_NAME Gw2Addon)
@@ -55,6 +55,16 @@ else()
     add_executable(${PROJECT_NAME} src/main.cpp)
 endif()
 
+target_sources(${PROJECT_NAME}
+    PRIVATE
+        src/main.cpp
+    PUBLIC 
+        FILE_SET CXX_MODULES 
+        BASE_DIRS src
+        FILES 
+            src/http.cppm
+)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
     nexus_api
     httplib::httplib
@@ -62,7 +72,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     OpenSSL::Crypto
 )
 
-# Output directory
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
