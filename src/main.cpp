@@ -1,4 +1,5 @@
 #include <Nexus.h>
+#include <iostream>
 #include <string>
 
 #include "http.h"
@@ -41,6 +42,11 @@ AddonDefinition* GetAddonDef() {
 }
 
 int main() {
-    https();
+    RareUnidData data = get_rare_unid_fast_farming_profits();
+    std::cout << data.tp_profit << "\n";
+    std::cout << data.tp_tax_profit << "\n";
+    std::cout << data.opened_salvage_profit << "\n";
+    std::cout << data.unopened_salvage_profit << "\n";
+    std::cout << data.open_extract_salvage_profit << "\n";
 }
 

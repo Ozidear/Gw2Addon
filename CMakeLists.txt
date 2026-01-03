@@ -48,11 +48,25 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(httplib)
 
+# JSON
+FetchContent_Declare(
+    json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.12.0
+)
+FetchContent_MakeAvailable(json)
+
 # Change to SHARED library in Release, executable otherwise
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    add_library(${PROJECT_NAME} SHARED src/main.cpp src/http.cpp)
+    add_library(${PROJECT_NAME} SHARED
+        src/main.cpp
+        src/http.cpp
+    )
 else()
-    add_executable(${PROJECT_NAME} src/main.cpp src/http.cpp)
+    add_executable(${PROJECT_NAME}
+        src/main.cpp
+        src/http.cpp
+    )
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -60,6 +74,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     httplib::httplib
     OpenSSL::SSL
     OpenSSL::Crypto
+    nlohmann_json::nlohmann_json
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
