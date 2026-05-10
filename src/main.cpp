@@ -28,8 +28,8 @@ void simulate_input(DWORD type, WORD virtual_key) {
 void handle_keybinds(const char* keybind_identifier, bool release) {
     std::string keybind_identifier_string = std::string{keybind_identifier};
 
-    if (keybind_identifier_string == "show_popup") {
-        simulate_input(INPUT_KEYBOARD, VK_RETURN);
+    if (keybind_identifier_string == "show_popup" && !release) {
+        simulate_input(INPUT_KEYBOARD, 'B');
     }
 }
 
