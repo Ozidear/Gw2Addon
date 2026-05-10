@@ -12,7 +12,7 @@ void simulate_input(DWORD type, WORD virtual_key) {
     WORD scan_code = (WORD)MapVirtualKey(virtual_key, MAPVK_VK_TO_VSC);
     INPUT inputs[2]{};
 
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 2; i++) {
         inputs[i].type = type;
 
         if (type == INPUT_KEYBOARD) {
