@@ -1,27 +1,46 @@
 #include <Nexus.h>
 #include <iostream>
 #include <string>
+#include <synchapi.h>
+#include <winuser.h>
 
-#include "http.h"
+#include "http.hpp"
 
 AddonAPI* g_addon_api = nullptr;
+
+void simulate_input(DWORD type, WORD virtual_key) {
+    WORD scan_code = (WORD)MapVirtualKey(virtual_key, MAPVK_VK_TO_VSC);
+    INPUT inputs[2]{};
+
+    for (int i = 0; i < 2; ++i) {
+        inputs[i].type = type;
+
+        if (type == INPUT_KEYBOARD) {
+            inputs[i].ki.wVk = 0;
+            inputs[i].ki.wScan = scan_code;
+            inputs[i].ki.dwFlags = KEYEVENTF_SCANCODE | (i == 1 ? KEYEVENTF_KEYUP : 0);
+        }
+    }
+
+    SendInput(2, inputs, sizeof(INPUT));
+}
 
 void handle_keybinds(const char* keybind_identifier, bool release) {
     std::string keybind_identifier_string = std::string{keybind_identifier};
 
-    if (keybind_identifier_string == "test") {
-        g_addon_api->UI.SendAlert("Test alert!!!");
+    if (keybind_identifier_string == "show_popup") {
+        simulate_input(INPUT_KEYBOARD, VK_RETURN);
     }
 }
 
 void load_addon(AddonAPI* addon_api) {
     g_addon_api = addon_api;
 
-    g_addon_api->InputBinds.RegisterWithString("test", handle_keybinds, "CTRL+N");
+    g_addon_api->InputBinds.RegisterWithString("show_popup", handle_keybinds, "CTRL+Z");
 }
 
 void unload_addon() {
-    // Addon unloading logic here
+    g_addon_api->InputBinds.Deregister("show_popup");
 }
 
 extern "C" __declspec(dllexport)
@@ -49,4 +68,3 @@ int main() {
     std::cout << data.unopened_salvage_profit << "\n";
     std::cout << data.open_extract_salvage_profit << "\n";
 }
-
